@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>Class 14</title>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-MfvZlkHCEqatNoGiOXveE8IwMzZg4W85qfrfIFBfYc=sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz&irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ=="  crossorigin="anonymous">
+<style>
+body{
+font-family: Verdana, Geneva, Tahoma, sans-serif ;
+    }
+.col-sm-6{ padding: 10px;}   
+.hide{ display: none}
+.show{ display: block;}
+.pageMovement{
+    margin-top: 25px;
+}
+.btn-default{ border-color: white; }
+.answer{
+    margin-right: auto;
+    margin-left: auto;
+    display: block;
+    width: 80%;
+    background: #b2b6eb;}
+  .container{
+    border: solid 1px #D8D8D8 ; }
+@media only screen and (max-width: 600px) {
+    .btn-primary{
+    border-color: white;
+    height: 40px;
+    width: 130px;
+    margin: 20px 20px;}}
+    #finishQuiz{
+        margin-top: 25px;
+    }
+    .output{
+        font-size: 20px;
+    }
+    .glyphicon-ok-circle{
+        color: #00ff64;
+    }
+    .glyphicon-remove-circle{
+        color:#ff0004;
+    }
+    .selAnswer{
+        background:#6cdb95;
+    }
+</style>  
+</head>
+    <body>
+     <div class="container">
+     <h3> &#128513;Hey Ruby here, Wanna check your knowledge, try 10 Qs and share score No Cheating&#128517;</h3>  
+     <div id="quizContent" class="row quiz">
+         <div class="col-sm-12">
+             <h4 id="quizHeader"></h4>
+         </div>
+         <div id="questions" class="row">
+        <div class="col-sm-6"> <a data-id="1" class="btn btn-default answer">attach clicks</a> </div>
+            <div class="col-sm-6"> <a data-id="2" class="btn btn-default answer">nothing</a> </div>
+                <div class="col-sm-6"> <a data-id="3" class="btn btn-default answer">never used</a> </div>
+                    <div class="col-sm-6"> <a data-id="4" class="btn btn-default answer">i dont know </a></div>
+        </div>
+  </div>
+  <div class="row pageMovement ">
+        <div id="btnPrevious" class="col-xs-5 col-sm-4 btn btn-primary pull-left">Previous</div>
+       <div id="btnNext" class="col-xs-5 col-sm-4 col-sm-offset-4 col-sm-offset-2 btn btn-primary pull-right">Next</div>  
+       </div>
+       <div class="row">
+           <div id="finishQuiz" class="btn btn-success btn-block hide">Submit Quiz</div>
+       </div>
+       <div class="progress" style="margin-top: 20px;">
+           <div id="progressBar" class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 50%;">
+           0% complete
+       </div>
+    </div>
+</body>
+</html>
+<script>
+var curPage=0;
+correct=0;
+var myAnswers=[]
+var myQuiz=[
+["Brannock Device is used to measure what?",3,"Pressure inside a box","Tensity","A person's shoe size","Weight of guaze"],
+["How do you write 10+5+1 in Roman numbers?",1,"XVI","XVV","XIV","None of them"],
+["The USA has the most roads what country has the second-most?",4,"UK","Russia","Canada","India"],
+["What is Pericón?",1,"Dance of Argentina","Food in Argentina","Argentinian Brand","None of them"],
+["What animal has its scientific name Sus scrofa?",4,"Snake","Sea horse","Seal","Wild Boar"],
+["What is the country of origin for the Stanley Cup?",2,"USA","Canada","India","New Zealand"],
+["What cult movie franchise is said to be cursed following a series of accidents and tragedies involving actors in the various films?",2,"Alien","Poltergeist","Annabelle","IT"],
+["Gold medals are mostly made of what metal?",1,"silver","gold","brass-copper","None of them"],
+["What is Roland Garros?",2,"Horse Riding Match","Tennis tournament","skiing event","Gymnastics preparation"],
+["At what temperature Celsius and Fahrenheit equal?",1,"-40","40","-38","None of them"]
+];
+console.log(myQuiz.length);
+
+document.getElementById("btnNext").addEventListener("click",moveNext);
+document.getElementById("btnPrevious").addEventListener("click",moveBack);
+var btnFinish=document.getElementById("finishQuiz")
+var myQuestion=document.getElementById("questions")
+var progressBar=document.getElementById("progressBar")
+var classname=document.getElementsByClassName("answer");
+var myHeader=document.getElementById("quizHeader")
+
+checkPage();
+
+btnFinish.addEventListener("click",endQuiz)
+for(var i=0; i<classname.length;i++){
+    classname[i].addEventListener('click',myAnswer,false)
+}
+
+function myAnswer(){
+  
+    var idAnswer = this.getAttribute("data-id")
+    myAnswers[curPage]=idAnswer;
+    if(myQuiz[curPage][1]==idAnswer){
+        console.log("Correct")
+       // myAnswers[curPage]=idAnswer;
+    }else{
+        console.log("Wrong")
+       // myAnswers[curPage]=idAnswer;
+    }
+    console.log(myAnswers);
+    addBox();
+   // document.getElementsById("page1").innerHTML = 'Answer '+ idAnswer;
+}
+
+function addBox(){
+    for(var i=0;i<myQuestion.children.length;i++){
+        var curNode=myQuestion.children[i];
+        if(myAnswers[curPage]==(i+1)){
+            curNode.classList.add("selAnswer")
+        }else{
+            curNode.classList.remove("selAnswer")
+
+        }
+    }
+}
+
+function moveNext(){
+
+ if(myAnswers[curPage]){
+
+        if(curPage<(myQuiz.length-1)){
+        curPage++;
+        checkPage(curPage);
+    }else{
+
+        if(myQuiz.length>=curPage){
+            endQuiz();
+        }else{
+            console.log('end of quiz '+curPage)
+        }
+    }
+    }else{
+        console.log("Not answered")
+    }
+}
+   
+
+function endQuiz(){
+    if(myAnswers[2]){
+       var output="<div class='output' style='padding:40px'>Quiz Results<br>";
+        var questionResult="NA"
+        console.log("Quiz over")
+    
+        for(var i=0;i<myAnswers.length;i++){
+            if(myQuiz[i][1]==myAnswers[i]){
+                questionResult='<span class="glyphicon glyphicon-ok-circle aria-hidden="true"></span>'
+            correct++;
+            btnFinish.classList.add("hide")
+            btnPrevious.classList.add("hide")
+            }else{
+                questionResult='<span class="glyphicon glyphicon-remove-circle aria-hidden="true"></span>'
+            }
+            output=output+'<p>    '+(i+1)+' '+questionResult+'</p>'
+        }
+        output=output+'<p>You scored '+correct+' out of '+myQuiz.length+'</p> </div>';
+        document.getElementById("quizContent").innerHTML=output;
+    }else{
+        console.log("Havent answered")
+    }
+}
+function checkPage(i){
+    if(curPage==0){
+        btnPrevious.classList.add("hide")
+    }
+else{
+    btnPrevious.classList.remove("hide")
+}
+if((curPage+1)<(myQuiz.length)){
+    btnNext.classList.remove("hide")
+}else{
+    btnNext.classList.add("hide")
+    btnFinish.classList.remove("hide")
+}
+    console.log(curPage+1)
+    myHeader.innerHTML=myQuiz[curPage][0];
+    for(var i =0; i<myQuestion.children.length;i++){
+        var curNode=myQuestion.children[i];
+        console.log(curNode.childNodes[1].innerHTML)
+        curNode.childNodes[1].innerHTML=capitalise(myQuiz[curPage][(i+2)])
+
+        if(myAnswers[curPage]==(i+1)){
+            curNode.classList.add("selAnswer")
+        }
+        else{
+            curNode.classList.remove("selAnswer")
+
+        }
+
+    }
+    //progress
+    var increment= Math.ceil((curPage+1)/(myQuiz.length)*100)
+    progressBar.style.width=(increment)+'%';
+    progressBar.innerHTML=(increment)+'%'
+}
+function moveBack(){
+    if(curPage>0){
+        curPage--;
+        checkPage(curPage)
+    }else{
+        console.log('end of quiz '+curPage)
+    }
+
+}
+
+function capitalise(str){
+return str.substr(0,1).toUpperCase() + str.substr(1);
+}
+</script>
